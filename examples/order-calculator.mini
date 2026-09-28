@@ -1,0 +1,13 @@
+begin
+    let count : int = 5;
+    let price : real = 12.5;
+    let total : real = count * price;
+
+    when (total > 50.0) {
+        show("Large order");
+    } otherwise {
+        show("Small order");
+    }
+    show(total);
+end
+
