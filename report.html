@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MiniLang Studio · Project Report</title><style>
+@page{margin:18mm}*{box-sizing:border-box}body{font:11pt/1.62 Georgia,serif;color:#20251f;max-width:900px;margin:0 auto;padding:45px;background:#fbfbf8}h1,h2,h3{font-family:Arial,sans-serif;color:#263328;line-height:1.2}h1{font-size:30pt;margin:0 0 8px}h2{font-size:17pt;border-bottom:1px solid #dce2d8;padding-bottom:6px;margin-top:35px}h3{font-size:12pt;margin-bottom:5px}.subtitle{font:13pt/1.5 Arial,sans-serif;color:#6b7667;margin:0 0 35px}.cover{min-height:280px;border-bottom:4px solid #d35b36;padding-top:50px}.tag{font:9pt Arial,sans-serif;letter-spacing:2px;color:#d35b36;font-weight:bold}.flow{font:10pt/1.55 Consolas,monospace;background:#f0f3ec;border:1px solid #dce3d8;padding:18px;white-space:pre-wrap}.code{font:9.5pt/1.55 Consolas,monospace;background:#292f29;color:#e4ebdc;padding:16px;white-space:pre-wrap;overflow:auto}table{border-collapse:collapse;width:100%;font:9.5pt Arial,sans-serif;margin:12px 0}td,th{border:1px solid #dce3d8;padding:8px;text-align:left;vertical-align:top}th{background:#eef2eb;color:#3f503e}li{margin:5px 0}@media print{body{padding:0;background:white}.cover{page-break-after:always}h2{break-after:avoid}.code,.flow,table{break-inside:avoid}}</style></head>
+<body><section class="cover"><div class="tag">PROJECT REPORT · COMPILER DESIGN</div><h1>MiniLang Studio</h1><p class="subtitle">Mini Compiler for a Simple Programming Language<br>Interactive compiler phases, a custom language, and a step-by-step virtual machine</p><p>Prepared as an educational implementation for Systems Programming and Compiler Design.</p></section>
+<h2>Abstract</h2><p>MiniLang Studio is an educational compiler project that makes compilation observable. It implements a custom language named MiniLang and displays each stage from editable source code through lexical analysis, parsing, AST construction, symbol-table creation, semantic analysis, intermediate-code generation, target-code generation, virtual-machine execution, and output. The application is local, self-contained, and uses a handwritten compiler so that each major decision stays inspectable.</p>
+<h2>Objectives</h2><ul><li>Demonstrate the standard compiler flow in one working system.</li><li>Define an original language with syntax and semantic rules.</li><li>Generate real tokens, trees, symbols, instructions, and output for user programs.</li><li>Report positioned lexical, syntax, semantic, and runtime errors.</li><li>Execute generated instructions one at a time with visible state changes.</li></ul>
+<h2>Requirements and technology</h2><p>The project runs in a modern browser with no installation, account, external library, server, database, or network requirement. HTML, CSS, and vanilla JavaScript implement the interface and compiler. Node.js is only needed to run the automated tests.</p>
+<h2>MiniLang language definition</h2><h3>Tokens</h3><p>Keywords are <code>begin</code>, <code>end</code>, <code>let</code>, <code>int</code>, <code>real</code>, <code>bool</code>, <code>text</code>, <code>when</code>, <code>otherwise</code>, <code>show</code>, <code>true</code>, and <code>false</code>. Identifiers start with a letter or underscore. Comments use <code>//</code>. Strings use double quotes and support newline, tab, quote, and backslash escapes.</p>
+<h3>Grammar (EBNF)</h3><div class="code">program     = "begin" { statement } "end" EOF ;
+statement   = declaration | assignment | conditional | output ;
+declaration = "let" identifier ":" type "=" expression ";" ;
+assignment  = identifier "=" expression ";" ;
+conditional = "when" "(" expression ")" block [ "otherwise" block ] ;
+block       = "{" { statement } "}" ;
+output      = "show" "(" expression ")" ";" ;
+type        = "int" | "real" | "bool" | "text" ;
+expression  = or ;
+or          = and { "||" and } ;
+and         = equality { "&&" equality } ;
+equality    = comparison { ("==" | "!=") comparison } ;
+comparison  = addition { ("&lt;" | "&lt;=" | "&gt;" | "&gt;=") addition } ;
+addition    = product { ("+" | "-") product } ;
+product     = unary { ("*" | "/" | "%") unary } ;
+unary       = ("!" | "-" | "+") unary | primary ;
+primary     = literal | identifier | "(" expression ")" ;</div>
+<h3>Semantic rules</h3><p>MiniLang supplies <code>int</code>, <code>real</code>, <code>bool</code>, and <code>text</code>. Arithmetic requires numeric values; division returns <code>real</code>; remainder requires integers. Text values concatenate with <code>+</code>. Conditions and logical operators require <code>bool</code>. An integer can widen to real; narrowing is rejected. Every block has lexical scope. Names must be declared before use, and duplicate active names or shadowing are errors.</p>
+<h2>Architecture</h2><div class="flow">Source Program
+      ↓
+Lexical Analysis → token table and scanner trace
+      ↓
+Syntax Analysis → parser trace
+      ↓
+Abstract Syntax Tree
+      ↓
+Symbol Table
+      ↓
+Semantic Analysis → typed AST and diagnostics
+      ↓
+Intermediate Code → three-address code
+      ↓
+Target Code → register instructions
+      ↓
+Execution → VM state and history
+      ↓
+Output</div>
+<h3>Compiler phases</h3><table><tr><th>Phase</th><th>Implementation and visible result</th></tr><tr><td>Lexical analysis</td><td>Maximal-munch scanner creates tokens with lexeme, category, decoded value, line/column, and trace.</td></tr><tr><td>Syntax analysis</td><td>Recursive-descent parser applies grammar and records tokens consumed.</td></tr><tr><td>AST</td><td>Source-spanned Program, declaration, assignment, conditional, output, expression, and literal nodes.</td></tr><tr><td>Symbol table / semantics</td><td>Scope stack creates unique IDs, resolves names, infers types, checks compatibility, and records diagnostics.</td></tr><tr><td>Intermediate code</td><td>Three-address code uses temporaries, labels, explicit casts, jumps, and prints.</td></tr><tr><td>Target code</td><td>Register-machine instructions load, store, calculate, compare, branch, print, and halt.</td></tr><tr><td>Execution</td><td>VM displays PC, registers, symbol-ID memory, output, and before/after changes for every instruction.</td></tr></table>
+<h2>Worked example</h2><div class="code">begin
+    let count : int = 5;
+    let price : real = 12.5;
+    let total : real = count * price;
+    show(total);
+end</div><p>The symbol table creates <code>s0</code> for <code>count:int</code>, <code>s1</code> for <code>price:real</code>, and <code>s2</code> for <code>total:real</code>. Code generation makes an explicit integer-to-real conversion before multiplication:</p><div class="code">s0 = 5
+s1 = 12.5
+t0 = s0
+t1 = real(t0)
+t2 = t1 * s1
+s2 = t2
+print s2
+halt</div><p>The generated target program prints <strong>62.5</strong>. Each load, store, conversion, multiplication, print, and halt appears in the Execution view.</p>
+<h2>Errors, limits, and verification</h2><p>Every error includes its phase, message, line, and column. Earlier phase artifacts stay visible after a later failure. Runtime failures preserve prior output and instruction history. Limits are 50,000 source characters, 128 nesting levels, 20,000 trace events per phase, 50,000 VM instructions, and 1,000,000 output-string characters.</p><p>The automated test run uses <code>node --test tests/compiler.test.cjs</code>. Result: <strong>58 passing tests, 0 failures</strong>. It covers lexical positions and escapes, grammar, scopes, types, conversion, code provenance, branches, short-circuiting, VM output/state, errors, limits, reset, and equivalence of Run versus Step Instruction.</p>
+<h2>Limitations and future scope</h2><p>The first version excludes loops, functions, input, arrays, optimization, and implicit conversions other than integer-to-real. Future work can add these language constructs, a control-flow graph, optimization passes, breakpoints, file import/export, and guided exercises.</p><h2>Conclusion</h2><p>MiniLang Studio integrates core compiler-design concepts in a working system. Its custom grammar, handwritten compiler, generated target instructions, position-aware diagnostics, and visual virtual machine make the full path from source program to output accessible for study and demonstration.</p>
+</body></html>
+
