@@ -1,0 +1,7 @@
+begin
+    let safe : bool = false && (10 / 0 > 1);
+    let ready : bool = true || (10 / 0 > 1);
+    show(safe);
+    show(ready);
+end
+
