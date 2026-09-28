@@ -1,0 +1,8 @@
+# Browser and operating-system files
+.DS_Store
+Thumbs.db
+
+# Local test and editor files
+coverage/
+node_modules/
+
