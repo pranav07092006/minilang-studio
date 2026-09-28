@@ -1,0 +1,6 @@
+begin
+    show("Execution started");
+    let divisor : int = 0;
+    show(10 / divisor);
+end
+
