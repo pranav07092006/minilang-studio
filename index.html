@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>MiniLang Studio · See how code becomes execution</title><link rel="stylesheet" href="styles.css"></head>
+<body>
+<header class="topbar"><a class="brand" href="index.html" aria-label="MiniLang Studio home"><span class="brand-mark">m<span>:</span></span><span>MiniLang <b>Studio</b></span></a><span class="top-tag">COMPILER EXPLORER</span><a class="report-link" href="report.html" target="_blank" rel="noopener">Project report ↗</a></header>
+<div class="shell">
+<aside class="sidebar"><div class="sidebar-head"><span class="eyebrow">THE COMPILATION JOURNEY</span><span id="progress-label">0 / 10</span></div><nav id="phases" aria-label="Compiler phases"></nav><div class="sidebar-note"><span class="tiny-mark">{ }</span><strong>Your language. Every layer.</strong><p>A handwritten compiler, a custom instruction set, and a real virtual machine.</p><span class="offline-dot"></span> Runs entirely on your device</div></aside>
+<main>
+<section class="intro"><div><div class="eyebrow">FROM SOURCE TO OUTPUT</div><h1>See your program <em>think.</em></h1><p>Write MiniLang. Follow each compiler phase. Watch every instruction execute.</p></div><div id="global-status" class="status-pill">Ready to explore</div></section>
+<div class="toolbar"><div class="example-control"><label for="example">EXAMPLE PROGRAM</label><select id="example"></select></div><div class="actions"><button id="next-phase" class="button secondary">Next phase <span>→</span></button><button id="compile" class="button primary">Compile all <span>⌘</span></button></div></div>
+<div class="workspace">
+<section class="source-card card"><div class="card-header"><div><span class="file-dot"></span><strong>program.mini</strong><span class="muted small"> · source</span></div><button id="download" class="text-button">Save source ↓</button></div><div class="editor-wrap"><pre id="line-numbers" aria-hidden="true"></pre><textarea id="source" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="MiniLang source code"></textarea></div><div class="editor-footer"><span id="source-position">Ln 1, Col 1</span><span>MiniLang v1.0 <span class="footer-dot">●</span> UTF-8</span></div><div id="diagnostics" aria-live="polite"></div><div class="source-tip"><span>↳</span><p id="example-description"></p></div></section>
+<section class="artifact-card card"><div class="artifact-heading"><span id="phase-number" class="phase-number">01</span><div><div class="eyebrow" id="phase-kicker">START HERE</div><h2 id="phase-title">Source Program</h2></div><span id="artifact-status" class="small muted">Editable</span></div><p id="phase-description" class="phase-description"></p><div id="artifact" tabindex="0"></div></section>
+</div>
+<section class="runtime-bar card"><div class="runtime-title"><span class="runtime-icon">▶</span><div><strong>Virtual machine</strong><p id="runtime-status" aria-live="polite">Compile your program to begin execution.</p></div></div><div class="runtime-actions"><button class="button ghost" id="reset" disabled>↺ Reset</button><button class="button secondary" id="step" disabled>Step instruction →</button><button class="button dark" id="run" disabled>▶ Run</button></div></section>
+<div class="bottom-note"><span>Built to make compiler design visible.</span><span>10 stages · 4 data types · 1 custom language</span></div>
+</main></div>
+<script src="src/common.js"></script><script src="src/lexer.js"></script><script src="src/parser.js"></script><script src="src/semantic.js"></script><script src="src/ir.js"></script><script src="src/target.js"></script><script src="src/vm.js"></script><script src="src/pipeline.js"></script><script src="src/examples.js"></script><script src="src/app.js"></script>
+</body></html>
+
